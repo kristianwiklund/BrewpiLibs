@@ -13,11 +13,11 @@
 #include "stdint.h"
 
 
-class Print {
+class BrewpiPrint {
 public:
-    Print();
-    Print(const Print& orig);
-    virtual ~Print();
+    BrewpiPrint();
+    BrewpiPrint(const BrewpiPrint& orig);
+    virtual ~BrewpiPrint();
     
     // convenience method to print a string
     size_t write(const char *str) {
@@ -31,7 +31,13 @@ public:
         }
         return done;
     }
-    
+    virtual size_t write(unsigned char s[], size_t size) {
+		size_t done = 0;
+        while (size--) {
+                done += write(s[done]);
+        }
+        return done;
+	}
     virtual size_t write(uint8_t c)=0;
     
      size_t print(const char* str)

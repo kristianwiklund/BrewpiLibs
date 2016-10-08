@@ -29,13 +29,13 @@
 //#include "conio.h"
 
 
-Print::Print() {
+BrewpiPrint::BrewpiPrint() {
 }
 
-Print::Print(const Print& orig) {
+BrewpiPrint::BrewpiPrint(const BrewpiPrint& orig) {
 }
 
-Print::~Print() {
+BrewpiPrint::~BrewpiPrint() {
 }
 
 

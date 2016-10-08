@@ -25,7 +25,7 @@
 #pragma once
 
 #include <stdint.h>
-//#include <BrewpiPrint.h>
+#include <BrewpiPrint.h>
 
 
 // commands
@@ -77,7 +77,7 @@
 #define BACKLIGHT_AUTO_OFF_PERIOD 600
 
 // class SpiLcd : public Print {
-class SpiLcd : public Print {
+class SpiLcd : public BrewpiPrint {
 
 	public:
 	// Constants are set in initializer list of constructor
@@ -143,7 +143,7 @@ class SpiLcd : public Print {
 	// Write spaces from current position to line end.
 	void printSpacesToRestOfLine(void);
 		
-	using Print::write;
+	using BrewpiPrint::write;
 
 	private:
 	void spiOut(void);
