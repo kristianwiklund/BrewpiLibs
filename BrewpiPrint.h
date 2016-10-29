@@ -11,7 +11,7 @@
 #include "stddef.h"
 #include "string.h"
 #include "stdint.h"
-
+#include <Arduino.h>
 
 class BrewpiPrint {
 public:

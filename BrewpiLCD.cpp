@@ -17,13 +17,13 @@
  * along with BrewPi.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "pins_arduino.h"
-#include "arduino.h"
+#include "Arduino.h"
 #include "DigitalIO.h"
 #include "BrewpiLCD.h"
 #include <stdio.h>
 #include <string.h>
 #include <inttypes.h>
-
+#include "BrewpiPins.h"
 
 #define lcdLatchPin 10
 
