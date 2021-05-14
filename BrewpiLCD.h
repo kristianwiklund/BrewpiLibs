@@ -26,7 +26,7 @@
 
 #include <stdint.h>
 #include <BrewpiPrint.h>
-
+#include <Adafruit_SPIDevice.h>
 
 // commands
 #define LCD_CLEARDISPLAY 0x01

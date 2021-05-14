@@ -24,9 +24,13 @@
 #include <string.h>
 #include <inttypes.h>
 #include "BrewpiPins.h"
+#include <SPI.h>
 
 #define lcdLatchPin 10
 
+// something with this code clashes with the adafruit code for reading from PT100 sensors.
+// my assumption is that it is the SPI communication that is b0rked, this code uses more or
+// less raw access to the HW. Let's replace it with the spi library and see what happens
 
 #include <util/delay.h>
 #include <util/atomic.h>
@@ -41,6 +45,7 @@ void SpiLcd::init()
 {
 	delay(2000); // give LCD time to power up
 
+	
 	fastPinMode(lcdLatchPin, OUTPUT);
 	
 	_displayfunction = LCD_FUNCTIONSET | LCD_4BITMODE;
@@ -224,21 +229,26 @@ inline size_t SpiLcd::write(uint8_t value) {
 
 /************ low level data pushing commands **********/
 void SpiLcd::initSpi(void){
+  	SPI.begin();
+	//	SPI.setBitOrder(MSBFIRST);
+	//	SPI.setDataMode(SPI_MODE3);
+	//	SPI.setClockDivider(SPI_CLOCK_DIV128);
+	
 	// Set MOSI and CLK to output
-	fastPinMode(MOSI, OUTPUT);
-	fastPinMode(SCK, OUTPUT);
-	fastPinMode(SS, OUTPUT);
+	//fastPinMode(MOSI, OUTPUT);
+	//fastPinMode(SCK, OUTPUT);
+	//fastPinMode(SS, OUTPUT);
 	// The most significant bit should be sent out by the SPI port first.
 	// equals SPI.setBitOrder(MSBFIRST);
-	SPCR &= ~_BV(DORD);
+	//SPCR &= ~_BV(DORD);
 
 	// Set the SPI clock to Fosc/128, the slowest option. This prevents problems with long cables.
-	SPCR |= _BV(SPR1);
-	SPSR |= _BV(SPR0);
+	//SPCR |= _BV(SPR1);
+	//SPSR |= _BV(SPR0);
 
 	// Set clock polarity and phase for shift registers (Mode 3)
-	SPCR |= _BV(CPOL);
-	SPCR |= _BV(CPHA);
+	//SPCR |= _BV(CPOL);
+	//SPCR |= _BV(CPHA);
 
 	// Warning: if the SS pin ever becomes a LOW INPUT then SPI
 	// automatically switches to Slave, so the data direction of
@@ -246,17 +256,21 @@ void SpiLcd::initSpi(void){
 	// On the Arduino Leonardo it is connected to the RX status LED, on the Uno we are using it as latch pin.
 	
 	// Set SPI as master and enable SPI
-	SPCR |= _BV(MSTR);
-	SPCR |= _BV(SPE);
+	//SPCR |= _BV(MSTR);
+	//SPCR |= _BV(SPE);
 }
 
 // Update the pins of the shift register
 void SpiLcd::spiOut(void){
 	fastDigitalWrite(lcdLatchPin, LOW);
+	SPI.beginTransaction(SPISettings(20000000, MSBFIRST, SPI_MODE3));
 	SPDR = _spiByte; // Send the byte to the SPI
 	// wait for send to finish
-	while (!(SPSR & _BV(SPIF))); 
-	
+	while (!(SPSR & _BV(SPIF)));
+
+
+	//	SPI.transfer(_spiByte);
+	SPI.endTransaction();
 	fastDigitalWrite(lcdLatchPin, HIGH);
 }
 
